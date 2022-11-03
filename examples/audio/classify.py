@@ -52,10 +52,14 @@ def main(argv):
 
             for res, audio in runner.classifier(device_id=selected_device_id):
                 print('Result (%d ms.) ' % (res['timing']['dsp'] + res['timing']['classification']), end='')
+                confidenceHigh = False
                 for label in labels:
                     score = res['result']['classification'][label]
+                    if(score > 0.95):
+                        confidenceHigh = True
                     print('%s: %.2f\t' % (label, score), end='')
-                print('', flush=True)
+                if (confidenceHigh):
+                    print('', flush=True)
 
         finally:
             if (runner):
