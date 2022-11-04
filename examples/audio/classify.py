@@ -46,16 +46,19 @@ def main(argv):
 
             #Let the library choose an audio interface suitable for this model, or pass device ID parameter to manually select a specific audio interface
             selected_device_id = None
+            confidenceLevel = 0.00
             if len(args) >= 2:
                 selected_device_id=int(args[1])
                 print("Device ID "+ str(selected_device_id) + " has been provided as an argument.")
+                confidenceLevel=float(args[2])
+                print("confidence level " + str(confidenceLevel) + " has been provided as an argument.")
 
             for res, audio in runner.classifier(device_id=selected_device_id):
                 print('Result (%d ms.) ' % (res['timing']['dsp'] + res['timing']['classification']), end='')
                 confidenceHigh = False
                 for label in labels:
                     score = res['result']['classification'][label]
-                    if(score > 0.95):
+                    if(score > confidenceLevel):
                         confidenceHigh = True
                     print('%s: %.2f\t' % (label, score), end='')
                 if (confidenceHigh):
